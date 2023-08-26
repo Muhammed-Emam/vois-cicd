@@ -2,7 +2,7 @@ name: Publish Docker image
 
 on:
   push:
-    branches: ['main']
+    branches: ['main' , 'workflow_dispatch']
 
 jobs:
   push_to_registry:
@@ -11,6 +11,14 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm # The directory where npm stores dependencies
+          key: npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ hashFiles('**/package-lock.json') }}  
       
       - name: Log in to Docker Hub
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
@@ -31,4 +39,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-#ss
