@@ -5,6 +5,30 @@ on:
     branches: ['main', 'workflow_dispatch']
 
 jobs:
+
+  run_tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_module
+          key: npm-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cashe-hit != 'true'
+        run: npm install
+
+      - name: Run tests
+        run: npm test    
+
+
+
   push_to_registry:
     name: Build img and push to docker hub and GCR
     runs-on: ubuntu-latest
@@ -63,32 +87,6 @@ jobs:
       #       docker push us-central1-docker.pkg.dev/verdant-future-387310/vois-repo/test    
 
 
-  run_tests:
-    name: Run Tests
-    needs: push_to_registry
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v2
-
-
-      - name: Cache Node.js dependencies
-        uses: actions/cache@v2
-        with:
-          path: node_module
-          key: npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            npm-${{ hashFiles('**/package-lock.json') }}
-          run: |
-            echo "Cache hit keys: ${{ steps.cache.outputs.keys }}"
-            echo "Cache restored keys: ${{ steps.cache.outputs.cache-hit }}"  
-
-      - name: Install dependencies
-        if: steps.cache.outputs.cashe-hit != 'true'
-        run: npm install
-
-      - name: Run tests
-        run: npm test    
 
   deploy_to_gke:
     name: Deploy to GKE
