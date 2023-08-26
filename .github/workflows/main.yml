@@ -24,8 +24,8 @@ jobs:
           GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
         run: | 
           gcloud auth configure-docker us-central-docker.pkg.dev
-          docker build -t us-central1-docker.pkg.dev/$GOOGLE_PROJECT/vois-repo/testnodejsapp:latest .
-          docker push us-central1-docker.pkg.dev/$GOOGLE_PROJECT/vois-repo/testnodejsapp:latest
+          docker build -t us-central1-docker.pkg.dev/verdant-future-387310/vois-repo/testnodejsapp:latest .
+          docker push us-central1-docker.pkg.dev/verdant-future-387310/vois-repo/testnodejsapp:latest
 
 
       - name: Cache Node.js dependencies
