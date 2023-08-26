@@ -20,8 +20,8 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: | 
           gcloud auth configure-docker us-central-docker.pkg.dev
-          docker build -t us-central1-docker.pkg.dev/verdant-future-387310/vois-repo/test .
-          docker push us-central1-docker.pkg.dev/verdant-future-387310/vois-repo/test
+          docker build -t us-central1-docker.pkg.dev/verdant-future-387310/vois-repo/test:latest .
+          docker push us-central1-docker.pkg.dev/verdant-future-387310/vois-repo/test:latest
 
       - name: Cache Node.js dependencies
         uses: actions/cache@v2
