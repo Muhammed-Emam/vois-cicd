@@ -1,4 +1,4 @@
-name: Publish Docker image
+name: Publish Docker image and Deploy to GKE
 
 on:
   push:
@@ -21,22 +21,7 @@ jobs:
         uses: 'google-github-actions/auth@v1'
         with:
           credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
-        
-      # - name: Build and push Docker image to GCR
-      #   env:
-      #     GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-      #   run: | 
-      #     gcloud auth configure-docker us-central-docker.pkg.dev
-      #     docker build -t us-central1-docker.pkg.dev/verdant-future-387310/vois-repo/test:latest .
-      #     docker push us-central1-docker.pkg.dev/verdant-future-387310/vois-repo/test:latest
 
-      - name: Cache Node.js dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            npm-${{ hashFiles('**/package-lock.json') }}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
@@ -50,6 +35,17 @@ jobs:
         with:
           images: muhammedemam/testnodejsapp
 
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ hashFiles('**/package-lock.json') }}    
+          run: |
+            echo "Cache hit keys: ${{ steps.cache.outputs.keys }}"
+            echo "Cache restored keys: ${{ steps.cache.outputs.cache-hit }}"  
+
       - name: Build and push Docker image to Docker Hub
         uses: docker/build-push-action@v2
         with:
@@ -57,12 +53,63 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+       
+      # - name: build and push docker image to gcr
+      #   env:
+      #     GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+      #   run: | 
+      #       gcloud auth configure-docker us-central-docker.pkg.dev
+      #       docker build -t us-central1-docker.pkg.dev/verdant-future-387310/vois-repo/test .
+      #       docker push us-central1-docker.pkg.dev/verdant-future-387310/vois-repo/test    
 
 
-      - name: deploy to gke
-        env: 
+  run_tests:
+    name: Run Tests
+    needs: push_to_registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ hashFiles('**/package-lock.json') }}
+          run: |
+            echo "Cache hit keys: ${{ steps.cache.outputs.keys }}"
+            echo "Cache restored keys: ${{ steps.cache.outputs.cache-hit }}"  
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test    
+
+  deploy_to_gke:
+    name: Deploy to GKE
+    needs: push_to_registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          install_components: 'kubectl'
+
+      - name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+
+      - name: Deploy to GKE
+        env:
           GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }} 
         run: |
-          gcloud container clusters get-credentials  autopilot-cluster-1 --region us-central1
-          kubectl apply -f deploymentservice.yml  
-
+          gcloud container clusters get-credentials autopilot-cluster-1 --region us-central1
+          kubectl apply -f deploymentservice.yml
