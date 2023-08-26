@@ -38,7 +38,7 @@ jobs:
       - name: Cache Node.js dependencies
         uses: actions/cache@v2
         with:
-          path: ~/.npm
+          path: node_module
           key: npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             npm-${{ hashFiles('**/package-lock.json') }}    
@@ -75,7 +75,7 @@ jobs:
       - name: Cache Node.js dependencies
         uses: actions/cache@v2
         with:
-          path: ~/.npm
+          path: node_module
           key: npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             npm-${{ hashFiles('**/package-lock.json') }}
@@ -84,6 +84,7 @@ jobs:
             echo "Cache restored keys: ${{ steps.cache.outputs.cache-hit }}"  
 
       - name: Install dependencies
+        if: steps.cache.outputs.cashe-hit != 'true'
         run: npm install
 
       - name: Run tests
@@ -91,7 +92,7 @@ jobs:
 
   deploy_to_gke:
     name: Deploy to GKE
-    needs: run_tests
+    needs: push_to_registry
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
