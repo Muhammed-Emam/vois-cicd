@@ -14,10 +14,11 @@ jobs:
 
       - name: install gcloud cli
         uses: google-github-actions/setup-gcloud@v0
+
+      - name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v0'
         with:
-          project_id: ${{ secrets.GOOGLE_PROJECT }}
-          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-          export_default_credentials: true
+          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'  
 
       - name: build and push docker image to gcr
         env:
