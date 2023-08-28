@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
+        with:
+
 
 
       - name: Cache Node.js dependencies
@@ -20,7 +22,11 @@ jobs:
         with:
           path: node_module
           key: npm-${{ hashFiles('**/package-lock.json') }}
+     
+      - name: chnge permission 
+          run: chown 777 ./test/test.js
 
+          
       - name: Install dependencies
         if: steps.cache.outputs.cashe-hit != 'true'
         run: npm install
@@ -65,8 +71,6 @@ jobs:
         with:
           path: node_module
           key: npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            npm-${{ hashFiles('**/package-lock.json') }}    
         # run: |
         #     echo "Cache hit keys: ${{ steps.cache.outputs.keys }}"
         #     echo "Cache restored keys: ${{ steps.cache.outputs.cache-hit }}"  
