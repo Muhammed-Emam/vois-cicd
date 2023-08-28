@@ -23,13 +23,15 @@ jobs:
           path: node_module
           key: npm-${{ hashFiles('**/package-lock.json') }}
      
-      - name: chnge permission 
-          run: chown 777 ./test/test.js
+      
 
-          
+
       - name: Install dependencies
         if: steps.cache.outputs.cashe-hit != 'true'
-        run: npm install
+        run: |
+            npm install
+            chown 777 ./test/test.js
+
 
       - name: Run tests
         run: npm test    
