@@ -29,7 +29,6 @@ jobs:
         if: steps.cache.outputs.cashe-hit != 'true'
         run: |
             npm install
-            chown 777 ./test/test.js
 
 
       - name: Run tests
