@@ -28,11 +28,13 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cashe-hit != 'true'
         run: |
-            npm install
+         npm install
 
 
       - name: Run tests
-        run: npm test    
+        run: |
+          chmod 777 ./test/test.js
+          npm test    
 
 
 
@@ -93,30 +95,30 @@ jobs:
 
 
 
-  deploy_to_gke:
-    name: Deploy to GKE
-    needs: push_to_registry
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v2
+  # deploy_to_gke:
+  #   name: Deploy to GKE
+  #   needs: push_to_registry
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out the repo
+  #       uses: actions/checkout@v2
 
-      - name: Setup Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          install_components: 'kubectl'
+  #     - name: Setup Google Cloud SDK
+  #       uses: google-github-actions/setup-gcloud@v0
+  #       with:
+  #         install_components: 'kubectl'
 
-      - name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v1'
-        with:
-          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+  #     - name: 'Authenticate to Google Cloud'
+  #       uses: 'google-github-actions/auth@v1'
+  #       with:
+  #         credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
 
-      - name: Deploy to GKE
-        env:
-          GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }} 
-        run: |
-          gcloud container clusters get-credentials autopilot-cluster-1 --region us-central1
-          kubectl apply -f deploymentservice.yml
+  #     - name: Deploy to GKE
+  #       env:
+  #         GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }} 
+  #       run: |
+  #         gcloud container clusters get-credentials autopilot-cluster-1 --region us-central1
+  #         kubectl apply -f deploymentservice.yml
 
 
 
