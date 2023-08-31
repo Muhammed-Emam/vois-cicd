@@ -1,6 +1,7 @@
 // var request = require('supertest');
 var assert = require('assert'); // Import the assert module
 var app = require('../index.js');
+var request = require('supertest');
 
 describe('GET /will', function() {
     it('respond with hello world', function(done) {
