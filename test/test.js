@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 var request = require('supertest');
 var app = require('../index.js');
 
