@@ -33,8 +33,9 @@ jobs:
 
       - name: Run tests
         run: |
+          npm install mocha chai supertest --save-dev
           chmod 777 ./test/test.js
-          npm test    
+          npm test 
 
 
 
