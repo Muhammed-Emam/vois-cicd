@@ -12,7 +12,13 @@ on:
 jobs:
   build_and_sonar_scan:
     runs-on: ubuntu-latest
+    
     steps:
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x  
+
       - name: Check out the repo
         uses: actions/checkout@v3
         
@@ -48,6 +54,11 @@ jobs:
     needs: build_and_sonar_scan
     runs-on: ubuntu-latest
     steps:
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+            
       - name: Check out the repo
         uses: actions/checkout@v2
 
