@@ -45,6 +45,9 @@ jobs:
             sudo ls /var/lib/docker/containers
 
 
+      - name: dubgging "finding image"
+        run: |
+            sudo ls /var/lib/docker/containers
     
 
         
