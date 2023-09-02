@@ -41,8 +41,9 @@ jobs:
 
       - name: dubgging "finding image"
         run: |
-            ls /var/lib/docker/ 
             ls /usr/local/bin/docker/   
+            sudo ls /var/lib/docker/ 
+
     
 
         
