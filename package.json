@@ -7,12 +7,11 @@
     "node": ">=16.0.0"
   },
   "dependencies": {
-    "express": "4.17.1"
+    "express": "*" 
   },
   "devDependencies": {
-    "mocha": "9.1.1",
-    "supertest": "6.1.6"
-  },
+    "mocha": "*",     
+    "supertest": "*"  
   "scripts": {
     "start": "node index.js",
     "test": "./node_modules/.bin/mocha ./test/test.js"
