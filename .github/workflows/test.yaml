@@ -23,10 +23,6 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v2
 
-      - name: Update npm packages
-        run: |
-          npm ci
-        shell: bash
   
       - name: Cache Docker build
         id: cache
