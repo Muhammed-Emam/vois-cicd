@@ -41,12 +41,14 @@ jobs:
 
       - name: dubgging "finding image"
         run: |
-            sudo ls /var/lib/docker/image
+            sudo ls /var/lib/docker/image/
+            sudo ls /var/lib/docker/
+
 
 
       - name: dubgging "finding image"
         run: |
-            sudo ls /var/lib/docker/containers
+            sudo ls /var/lib/docker/containers/
     
 
         
