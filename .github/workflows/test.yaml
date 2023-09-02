@@ -37,7 +37,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: docker-image
-          path: /usr/local/bin/docker/muhammedemam-testnodejsapp.tar
+          path: /usr/local/bin/docker/muhammedemam-testnodejsapp
+
+      - name: dubgging "finding image"
+        run: |
+            ls /var/lib/docker/ 
+            ls /usr/local/bin/docker/   
+    
 
         
 
