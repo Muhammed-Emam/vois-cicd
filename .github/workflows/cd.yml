@@ -1,0 +1,40 @@
+name: Deploy to GKE
+
+on:
+  pull_request:
+    branches: 
+       - main
+       - develop
+    types: closed
+      
+
+jobs:
+  deploy_to_gke:
+    if: ${{ github.event.pull_request.merged }}
+    name: Deploy to GKE
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          install_components: 'kubectl'
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}'
+
+      - name: Deploy to GKE
+        env:
+          GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+        run: |
+          if [ ${{ github.event.pull_request.base.ref == 'main' }} ]; then
+            gcloud container clusters get-credentials autopilot-cluster-1 --region us-central1
+            kubectl apply -f main-deployment.yml
+          elif [ ${{ github.event.pull_request.base.ref == 'develop' }} ]; then
+            gcloud container clusters get-credentials autopilot-cluster-1 --region us-central1
+            kubectl apply -f develop-deployment.yml
+          fi

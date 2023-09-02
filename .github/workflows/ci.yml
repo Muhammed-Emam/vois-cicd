@@ -1,9 +1,12 @@
 name: Publish Docker image and Deploy to GKE
 
 on:
-  push:
-    branches: ['main', 'workflow_dispatch']
-
+  pull_request:
+    branches:
+      - main
+      - develop
+      - release
+    types: opened 
 jobs:
 
   run_tests:
@@ -119,7 +122,3 @@ jobs:
   #       run: |
   #         gcloud container clusters get-credentials autopilot-cluster-1 --region us-central1
   #         kubectl apply -f deploymentservice.yml
-
-
-
-#comment
