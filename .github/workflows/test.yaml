@@ -28,10 +28,9 @@ jobs:
           restore-keys: |
             docker-build-${{ runner.os }}-
 
-      - name: Build Docker image
+      - name: Build Docker image        
         run: |
           docker build -t muhammedemam/testnodejsapp .
-        if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Save Docker image as artifact
         uses: actions/upload-artifact@v2
@@ -39,15 +38,15 @@ jobs:
           name: docker-image
           path: /usr/local/bin/docker/muhammedemam-testnodejsapp
 
-      - name: dubgging "finding image"
-        run: |
-            sudo ls -R /var/lib/docker/
+    #   - name: dubgging "finding image"
+    #     run: |
+    #         sudo ls -R /var/lib/docker/
 
 
 
-      - name: dubgging "finding image"
-        run: |
-         sudo find / -type f -exec file {} \; | grep -E 'muhammedemam/testnodejsapp'
+    #   - name: dubgging "finding image"
+    #     run: |
+    #      sudo find / -type f -exec file {} \; | grep -E 'muhammedemam/testnodejsapp'
 
     
 
