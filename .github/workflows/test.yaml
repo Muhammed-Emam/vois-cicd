@@ -41,7 +41,6 @@ jobs:
 
       - name: dubgging "finding image"
         run: |
-            chmod 777   /var/lib/docker/ 
             sudo ls /var/lib/docker/ 
 
     
