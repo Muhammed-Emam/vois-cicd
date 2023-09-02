@@ -4,14 +4,14 @@
   "version": "0.0.1",
   "private": true,
   "engines": {
-    "node": ">=16.0.0"
+    "node": "*"
   },
   "dependencies": {
-    "express": "4.17.1"
+    "express": "*"
   },
   "devDependencies": {
-    "mocha": "9.1.1",
-    "supertest": "6.1.6"
+    "mocha": "*",
+    "supertest": "*"
   },
   "scripts": {
     "start": "node index.js",
